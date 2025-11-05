@@ -1,0 +1,58 @@
+
+Requisitos do Projeto - Formato em Tópicos
+
+1. Tela de Login com DIV Centralizado e Transparência
+- Status: Atendido
+- Evidência: Slide 2 (Requisito 1)
+- Implementação:
+  • login.html utiliza Tailwind CSS com 'flex', 'items-center', 'justify-center', 'h-screen' para centralização.
+  • Transparência com 'bg-white/60' criando um efeito moderno sobre a tela.
+
+2. Botão 'Logar' Redirecionando para a Home
+- Status: Atendido
+- Evidência: Slide 2 (Requisito 2)
+- Implementação:
+  • Botão envia formulário para /logar.
+  • Backend (Flask) valida login e redireciona para /home com redirect(url_for('home')).
+
+3. Sistema de Busca na Página Home
+- Status: Atendido
+- Evidência: Slide 3 (Requisito 3)
+- Implementação:
+  • search.js chama /api/itens?q=<termo> via fetch.
+  • Backend filtra itens com SQLAlchemy e responde em JSON.
+
+4. Catálogo Flexível (Filmes, Jogos, Produtos, etc.)
+- Status: Atendido
+- Evidência: Slide 1 / Slide 3 (Requisito 4)
+- Implementação:
+  • Estrutura do catálogo genérica em models.py.
+  • Alteração no seed data permite reutilizar o sistema com outros temas.
+
+5. Exibição de Imagens dos Itens
+- Status: Atendido
+- Evidência: Slide 3 (Requisito 5)
+- Implementação:
+  • Cada item possui image_url salvo no banco.
+  • render.js exibe com <img src="..."> nos cards.
+
+6. Favoritar Itens Pesquisados
+- Status: Atendido
+- Evidência: Slide 4 (Requisito 6)
+- Implementação:
+  • Clique no botão adiciona item via POST para /api/lista.
+  • SQLAlchemy salva item na tabela associando ao usuário da sessão.
+
+7. Visualizar Itens Favoritos
+- Status: Atendido
+- Evidência: Slide 4 (Requisito 7)
+- Implementação:
+  • favorites.js realiza GET para /api/lista.
+  • Backend retorna apenas itens do usuário logado; exibidos no <aside>.
+
+8. Uso Consistente de Flexbox
+- Status: Atendido
+- Evidência: Slide 2 (Requisito 8)
+- Implementação:
+  • Tailwind CSS com classes como 'flex', 'flex-col', 'items-center'.
+  • Utilizado no home.html e render.js para layout responsivo.

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Super Mercado.com - {{ nome }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              "primary-at": "#008000",
+              "secondary-at": "#ff6600",
+              "bg-header-at": "#00a100",
+            },
+            boxShadow: {
+              "inner-lg": "inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)",
+            },
+            animation: {
+              gradient: "gradient 15s ease infinite",
+            },
+            keyframes: {
+              gradient: {
+                "0%, 100%": {
+                  "background-size": "200% 200%",
+                  "background-position": "left center",
+                },
+                "50%": {
+                  "background-size": "200% 200%",
+                  "background-position": "right center",
+                },
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .search-input-focus {
+        box-shadow: 0 0 0 2px rgba(255, 102, 0, 0.2);
+      }
+
+      .gradient-header {
+        background: linear-gradient(135deg, #00a100 0%, #008000 100%);
+      }
+
+      .glass-effect {
+        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.1);
+      }
+    </style>
+    <script
+      type="module"
+      src="{{ url_for('static', filename='js/modules/home.js') }}"
+    ></script>
+  </head>
+  <body class="bg-gray-100 min-h-screen">
+    <header
+      class="bg-gradient-to-b from-bg-header-at to-primary-at shadow-md sticky top-0 z-10"
+    >
+      <div class="max-w-7xl mx-auto px-4 py-3">
+        <div class="flex justify-between items-center">
+          <div class="flex items-center space-x-4">
+            <div class="bg-white p-2 rounded-lg shadow-sm">
+              <img
+                src="{{ url_for('static', filename='img/icons/mercado-inicio.png') }}"
+                alt="Ícone"
+                class="h-8 w-8 transform hover:scale-105 transition-transform"
+              />
+            </div>
+            <h1 class="text-3xl font-extrabold text-white tracking-tight">
+              Super Mercado.com
+            </h1>
+          </div>
+
+          <div class="flex items-center space-x-6">
+            <div class="text-right">
+              <div class="bg-white/10 backdrop-blur-sm rounded-lg px-4 py-2">
+                <p class="font-medium text-white">Bem-vindo(a), {{ nome }}!</p>
+                <p class="text-gray-100 text-sm">{{ endereco }}</p>
+              </div>
+            </div>
+            <a
+              href="{{ url_for('main.logout') }}"
+              class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 flex items-center space-x-2"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                />
+              </svg>
+              <span>Sair</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="max-w-7xl mx-auto px-4 pb-4">
+        <div class="bg-white rounded-xl shadow-lg p-3 relative">
+          <div class="flex items-center space-x-3">
+            <div class="text-gray-400">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+            </div>
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Pesquisar produtos ou marcas..."
+              class="flex-1 outline-none text-gray-700 text-lg placeholder-gray-400"
+            />
+            <button
+              id="searchButton"
+              class="bg-secondary-at hover:bg-orange-700 text-white font-medium px-6 py-2 rounded-lg transition-all duration-200 transform hover:scale-105 focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50"
+            >
+              Buscar
+            </button>
+          </div>
+        </div>
+        <div id="searchStatus" class="text-sm text-white/80 mt-2 px-1">
+          Use a barra de busca para encontrar itens no catálogo.
+        </div>
+      </div>
+    </header>
+
+    <main class="max-w-screen-3xl mx-auto p-4 md:p-8">
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div class="lg:col-span-3 overflow-hidden">
+          <h2 class="text-2xl font-bold mb-4 text-gray-800">
+            Resultados do Catálogo
+          </h2>
+
+          <div id="searchResults" class="overflow-x-auto hide-scrollbar p-4">
+            <p class="text-gray-500">
+              Seu catálogo de itens aparecerá aqui, organizado por categoria.
+            </p>
+          </div>
+        </div>
+        <aside
+          id="favoritesAside"
+          class="lg:col-span-1 p-4 lg:p-6 bg-white rounded-lg shadow-lg lg:h-[calc(100vh-12rem)] lg:sticky lg:top-40 overflow-y-auto hide-scrollbar hidden lg:block"
+        >
+          <h2
+            class="text-2xl font-bold mb-4 text-gray-800 border-b pb-2 sticky top-0 bg-white flex items-center gap-2"
+          >
+            <img
+              src="{{ url_for('static', filename='img/icons/mercado-inicio.png') }}"
+              alt="Ícone"
+              class="h-8 w-8"
+            />
+            Minha Lista
+          </h2>
+          <div id="favoritesList" class="space-y-3">
+            <p class="text-gray-500">Carregando seus itens...</p>
+          </div>
+        </aside>
+      </div>
+    </main>
+
+    <button
+      id="toggleFavoritesBtn"
+      class="lg:hidden fixed left-4 bottom-6 bg-primary-at text-white px-3 py-2 rounded-full shadow-md z-50 flex items-center gap-2"
+    >
+      <img
+        src="{{ url_for('static', filename='img/icons/mercado-inicio.png') }}"
+        alt="Ícone"
+        class="h-6 w-6"
+      />
+      Minha Lista
+    </button>
+
+    <style>
+      .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .hide-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    </style>
+
+    <button
+      id="finalizarBtn"
+      title="Finalizar Lista"
+      class="fixed right-6 bottom-6 bg-primary-at text-white px-4 py-3 rounded-full shadow-lg hover:scale-105 transition-transform"
+    >
+      Finalizar Lista
+    </button>
+
+    <div
+      id="finalModal"
+      class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+    >
+      <div class="bg-white rounded-xl w-11/12 max-w-3xl p-6 relative">
+        <div
+          class="flex justify-between items-center mb-4 sticky top-0 bg-white z-10"
+        >
+          <div class="flex items-center gap-3">
+            <img
+              src="{{ url_for('static', filename='img/icons/mercado-inicio.png') }}"
+              alt="Ícone"
+              class="h-8 w-8"
+            />
+            <h3 class="text-xl font-bold text-gray-800">Lista Final</h3>
+          </div>
+          <button
+            id="closeFinalModal"
+            class="text-gray-500 hover:text-gray-800 bg-gray-100 hover:bg-gray-200 rounded-lg px-4 py-2 transition-colors"
+          >
+            Fechar
+          </button>
+        </div>
+        <div
+          id="finalListContent"
+          class="space-y-2 max-h-[70vh] overflow-y-auto pr-2 hide-scrollbar"
+        ></div>
+      </div>
+    </div>
+  </body>
+</html>
