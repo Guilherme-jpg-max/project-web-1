@@ -28,10 +28,6 @@ ENV/
 # Environment Variables
 .env
 
-# Database
-instance/
-*.db
-*.sqlite3
 
 # VS Code
 .vscode/
