@@ -48,8 +48,8 @@ def buscar_itens():
         itens = Item.query.all()
     else:
         itens = Item.query.filter(
-            (Item.nome.ilike(f'%{termo_busca}%')) |
-            (Item.categoria.ilike(f'%{termo_busca}%'))
+            (Item.nome.ilike(f'%{termo_busca}%')) | #type: ignore
+            (Item.categoria.ilike(f'%{termo_busca}%')) # type: ignore
         ).all()
 
     itens_agrupados = {}
@@ -85,30 +85,59 @@ def adicionar_a_lista():
     if not usuario_key:
         return jsonify({"erro": "Usuário não logado"}), 401
 
-    data = request.get_json() or {}
-    item_id = data.get('item_id')
-    quantidade = data.get('quantidade', 1.0)
+    try:
+        data = request.get_json() or {}
+        item_id = data.get('item_id')
+        quantidade = data.get('quantidade', 1.0)
 
-    if not item_id or not Item.query.get(item_id):
-        return jsonify({"erro": "Item ID inválido ou ausente"}), 400
+        if not item_id:
+            return jsonify({"erro": "Item ID ausente"}), 400
+        
+        # Validar se item existe
+        item = Item.query.get(item_id)
+        if not item:
+            return jsonify({"erro": "Item não encontrado"}), 404
 
-    item_existente = ListaMercado.query.filter_by(usuario_key=usuario_key, item_id=item_id).first()
-    if item_existente:
+        # Validar quantidade
         try:
-            item_existente.quantidade = float(item_existente.quantidade) + float(quantidade)
-        except ValueError:
-            item_existente.quantidade += 1.0
+            quantidade = float(quantidade)
+            if quantidade <= 0:
+                return jsonify({"erro": "Quantidade deve ser maior que zero"}), 400
+        except (ValueError, TypeError):
+            return jsonify({"erro": "Quantidade inválida"}), 400
 
+        item_existente = ListaMercado.query.filter_by(
+            usuario_key=usuario_key, 
+            item_id=item_id
+        ).first()
+        
+        if item_existente:
+            item_existente.quantidade = float(item_existente.quantidade) + quantidade
+            db.session.commit()
+            return jsonify({
+                "mensagem": "Quantidade atualizada.",
+                "id": item_existente.id,
+                "quantidade": item_existente.quantidade
+            }), 200
+
+        novo_item = ListaMercado(
+            usuario_key=usuario_key, 
+            item_id=item_id, 
+            quantidade=quantidade
+        )
+        db.session.add(novo_item)
         db.session.commit()
-        return jsonify({
-            "mensagem": "Quantidade atualizada.",
-            "id": item_existente.id,
-            "quantidade": item_existente.quantidade
-        }), 200
 
-    novo_item = ListaMercado(usuario_key=usuario_key, item_id=item_id, quantidade=quantidade)
-    db.session.add(novo_item)
-    db.session.commit()
+        return jsonify({
+            "mensagem": "Item adicionado com sucesso!",
+            "id": novo_item.id,
+            "quantidade": novo_item.quantidade
+        }), 201
+
+    except Exception as e:
+        db.session.rollback()
+        print(f"Erro ao adicionar item: {e}")
+        return jsonify({"erro": "Erro interno do servidor"}), 500
 
     return jsonify({
         "mensagem": "Item adicionado com sucesso!",

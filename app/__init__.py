@@ -1,5 +1,3 @@
-# app/__init__.py
-
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from app.config import Config
@@ -18,12 +16,9 @@ def create_app(config_class=Config):
     return app
 
 
-# Mock de dados iniciais (12 Categorias x 25 Itens = 300 Itens)
-def init_db():
+def init_db(app):
     from app.models import Item
 
-    app = create_app()
-    
     with app.app_context():
         db.create_all() 
         
@@ -45,15 +40,11 @@ def init_db():
                 'Carnes': ['Contra Filé', 'Alcatra', 'Picanha', 'Frango Inteiro', 'Peito de Frango', 'Coxa de Frango', 'Linguiça', 'Bacon', 'Costela', 'Carne Moída', 'Filé Mignon', 'Cupim', 'Maminha', 'Fraldinha', 'Patinho']
             }
 
-
             for categoria, nomes in categorias.items():
                 for nome in nomes:
                     nome_completo = f"{nome} ({categoria})" if nome in ["Pão de Queijo"] else nome
-
                     categoria_path = categoria.lower().replace(' ', '-').replace('í', 'i').replace('ô', 'o')
-                    
                     base_path = f'/static/img/{categoria_path}'
-                    
                     img_url = '/static/img/icons/default.png'
                     
                     import os
@@ -76,7 +67,6 @@ def init_db():
                         for arquivo in arquivos:
                             nome_arquivo = os.path.splitext(arquivo)[0]
                             nome_arquivo_normalizado = normalize_name(nome_arquivo)
-                            
                             palavras_item = set(nome_item_normalizado.split())
                             palavras_arquivo = set(nome_arquivo_normalizado.split())
                             
@@ -94,6 +84,4 @@ def init_db():
 
             db.session.add_all(itens_iniciais)
             db.session.commit()
-            print(f"Banco de dados inicializado com sucesso e {len(itens_iniciais)} itens de mercado adicionados.")
-
-app = create_app()
+            print(f"✅ Banco de dados inicializado com {len(itens_iniciais)} itens.")
