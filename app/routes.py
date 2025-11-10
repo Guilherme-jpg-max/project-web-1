@@ -93,12 +93,10 @@ def adicionar_a_lista():
         if not item_id:
             return jsonify({"erro": "Item ID ausente"}), 400
         
-        # Validar se item existe
         item = Item.query.get(item_id)
         if not item:
             return jsonify({"erro": "Item não encontrado"}), 404
 
-        # Validar quantidade
         try:
             quantidade = float(quantidade)
             if quantidade <= 0:

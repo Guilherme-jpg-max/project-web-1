@@ -84,4 +84,4 @@ def init_db(app):
 
             db.session.add_all(itens_iniciais)
             db.session.commit()
-            print(f"✅ Banco de dados inicializado com {len(itens_iniciais)} itens.")
+            print(f"Banco de dados inicializado com {len(itens_iniciais)} itens.")

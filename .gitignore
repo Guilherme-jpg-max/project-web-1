@@ -1,14 +1,11 @@
-# Environment
 .env
 *.env
 
-# Database
 instance/
 *.db
 *.sqlite
 *.sqlite3
 
-# Python
 __pycache__/
 *.pyc
 *.pyo
@@ -16,12 +13,10 @@ venv/
 env/
 .venv/
 
-# IDE
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# OS
 .DS_Store
 Thumbs.db

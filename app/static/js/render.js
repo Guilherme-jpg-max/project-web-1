@@ -141,7 +141,6 @@ export function renderizarResultados(
       }
       const isFav = !!favData;
       const card = criarCartaoItem(item, adicionarFavoritoHandler, isFav);
-      // flex-none evita que o card encolha no carrossel horizontal; adiciona card-min para estilos custom
       card.classList.add("flex-none", "w-[150px]", "sm:w-[180px]", "card-min");
       row.appendChild(card);
     });
