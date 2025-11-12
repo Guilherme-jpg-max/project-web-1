@@ -26,7 +26,7 @@ static/
       home.js         # tailwindcss da página: inicializa busca, favoritos e modal
       search.js       # Busca, debounce e handler de "Adicionar" (usa api.js e render.js)
       favorites.js    # Carrega a lista, administra eventos fav-remove/fav-increment/fav-decrement
-      login.js        # Comportamento opcional do formulário de login
+      login.js        # Comportamento do formulário de login
 templates/
   home.html           # — carrega o módulo principal: /static/js/modules/home.js
 ```

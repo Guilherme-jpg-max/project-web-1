@@ -1,4 +1,4 @@
-// Este módulo manipula apenas o DOM; ações (API) são disparadas via eventos e tratadas em app.js
+// manipula apenas o DOM; ações (API) são disparadas via eventos e tratadas em app.js
 
 const searchResultsDiv = document.getElementById("searchResults");
 const favoritesListDiv = document.getElementById("favoritesList");
@@ -17,7 +17,6 @@ export function criarCartaoItem(
   const precoNovo = (Math.random() * 8 + 4).toFixed(2);
   const precoAntigo = (parseFloat(precoNovo) + 5).toFixed(2);
 
-  // usa imagem de fallback se necessario
   const imgSrc =
     item.imagem_url && item.imagem_url !== ""
       ? item.imagem_url

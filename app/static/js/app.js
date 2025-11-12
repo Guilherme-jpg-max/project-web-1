@@ -147,6 +147,11 @@ document.addEventListener("DOMContentLoaded", () => {
       if (e.target === finalModal) finalModal.classList.add("hidden");
     });
   }
+
+
+  // final do itens favoritos
+
+
   window.addEventListener("fav-remove", async (e) => {
     const lista_id = e.detail.lista_id;
     try {
